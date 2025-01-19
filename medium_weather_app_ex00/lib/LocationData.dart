@@ -3,7 +3,7 @@ import 'package:geolocator/geolocator.dart';
 
 class LocationData extends ChangeNotifier {
   String _location = "";
-  String _gpsLoading = "";
+  final String _gpsLoading = "";
 
   String get location => _location;
   String get gpsLoading => _gpsLoading;

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'WeatherUI.dart';
 import 'package:provider/provider.dart';
-import 'LocationData.dart';
+import 'GpsData.dart';
 
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (context) => LocationData(),
+      create: (context) => GpsData(),
       child: const MainApp(),
     ),
   );

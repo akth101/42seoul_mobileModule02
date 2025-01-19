@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'LocationData.dart';
+import 'GpsData.dart';
 
 class WeatherUI extends StatefulWidget {
   const WeatherUI({
@@ -72,7 +72,7 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
   }
 
   Center changableText(Size screenSize, String time) {
-    final locateProvider = context.watch<LocationData>();
+    final locateProvider = context.watch<GpsData>();
     return locateProvider.location == "" ? 
     Center(
       child: Text(
@@ -106,7 +106,7 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
       title: TextField(
         controller: _textController,
         onSubmitted: (String value) async {
-          final locateProvider = context.read<LocationData>();
+          final locateProvider = context.read<GpsData>();
           locateProvider.fixLocation(value);
         },
         decoration: const InputDecoration(
@@ -123,7 +123,7 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
             padding: const EdgeInsets.only(right: 16, left: 6),
             child: GestureDetector(
               onTap: () {
-                final locateProvider = context.read<LocationData>();
+                final locateProvider = context.read<GpsData>();
                 locateProvider.getCurrentLocation();
               },
               child: const Icon(
