@@ -124,7 +124,7 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
             child: GestureDetector(
               onTap: () {
                 final locateProvider = context.read<LocationData>();
-                locateProvider.fixGeoLocation();
+                locateProvider.getCurrentLocation();
               },
               child: const Icon(
                 Icons.gps_fixed_outlined,
