@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'WeatherUI.dart';
 import 'package:provider/provider.dart';
+import 'WeatherApiData.dart';
 import 'GpsData.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => GpsData(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => GpsData()),
+        ChangeNotifierProvider(create: (_) => WeatherApiData()),
+      ],
       child: const MainApp(),
     ),
   );
 }
-
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
