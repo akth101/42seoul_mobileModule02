@@ -55,7 +55,9 @@ class WeatherApiData extends ChangeNotifier {
       debugPrint('City: ${result['name']}, '
           'Country: ${result['country']}, '
           'Latitude: ${result['latitude']}, '
-          'Longitude: ${result['longitude']}');
+          'Longitude: ${result['longitude']} '
+          'admin1: ${result['admin1']}'
+          );
     }
   }
 }

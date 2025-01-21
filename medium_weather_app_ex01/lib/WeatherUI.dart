@@ -50,7 +50,18 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
       titleSpacing: -8,
       backgroundColor: Colors.blue,
       title: Autocomplete<Map<String, dynamic>>(
-        displayStringForOption: (option) => "${option['name']} ${option['country']}", 
+        displayStringForOption: (option) => "${option['name']} ${option['admin1']} ${option['country']}", 
+        fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
+          return TextField(
+            controller: textEditingController,
+            focusNode: focusNode,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+            ),
+          );
+        },
         optionsBuilder: (TextEditingValue textEditingValue) async {
           if (textEditingValue.text == '') {
             return const Iterable<Map<String, dynamic>>.empty();
@@ -84,6 +95,13 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
                               style: const TextStyle(color: Colors.black),
                             ),
                             TextSpan(
+                              text: " ${option['admin1']}",
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            TextSpan(
                               text: " ${option['country']}",
                               style: const TextStyle(
                                 color: Colors.grey,
@@ -102,7 +120,7 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
           );
         },
         onSelected: (Map<String, dynamic> selection) {
-          debugPrint('Selected: ${selection['name']} ${selection['country']}');
+          debugPrint('Selected: ${selection['name']} ${selection['admin1']} ${selection['country']}');
         },
       ),
       actions:  [
