@@ -42,61 +42,6 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
     );
   }
 
-  BottomAppBar bottomBarUI() {
-    return BottomAppBar(
-      color: Colors.white,
-      child: TabBar(
-        controller: _tabController,
-        tabs: const <Widget>[
-          Tab(
-            icon: Icon(Icons.sunny),
-            text: "Currently",
-          ),
-          Tab(icon: Icon(Icons.calendar_today), text: "Today"),
-          Tab(
-            icon: Icon(Icons.calendar_month),
-            text: "Weekly",
-          ),
-        ],
-      ),
-    );
-  }
-
-  TabBarView middleUI(Size screenSize) {
-    debugPrint("detected location text changing");
-    return TabBarView(controller: _tabController, children: <Widget>[
-      changableText(screenSize, "Currently"),
-      changableText(screenSize, "Today"),
-      changableText(screenSize, "Weekly"),
-    ]);
-  }
-
-  Center changableText(Size screenSize, String time) {
-    final locateProvider = context.watch<GpsData>();
-    return locateProvider.location == "" ? 
-    Center(
-      child: Text(
-        time,
-        style: TextStyle(fontSize: screenSize.width * 0.05),
-      ),
-    )
-    : Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            time,
-            style: TextStyle(fontSize: screenSize.width * 0.05),
-          ),
-          Text(
-            locateProvider.location,
-            style: TextStyle(fontSize: screenSize.width * 0.05),
-          ),
-        ],
-      ),
-    ); 
-  }
 
   AppBar topBarUI() {
     return AppBar(
@@ -134,4 +79,60 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
       ],
     );
   }
+
+  TabBarView middleUI(Size screenSize) {
+    debugPrint("detected location text changing");
+    return TabBarView(controller: _tabController, children: <Widget>[
+      changableText(screenSize, "Currently"),
+      changableText(screenSize, "Today"),
+      changableText(screenSize, "Weekly"),
+    ]);
+  }
+
+  BottomAppBar bottomBarUI() {
+    return BottomAppBar(
+      color: Colors.white,
+      child: TabBar(
+        controller: _tabController,
+        tabs: const <Widget>[
+          Tab(
+            icon: Icon(Icons.sunny),
+            text: "Currently",
+          ),
+          Tab(icon: Icon(Icons.calendar_today), text: "Today"),
+          Tab(
+            icon: Icon(Icons.calendar_month),
+            text: "Weekly",
+          ),
+        ],
+      ),
+    );
+  }
+  Center changableText(Size screenSize, String time) {
+    final locateProvider = context.watch<GpsData>();
+    return locateProvider.location == "" ? 
+    Center(
+      child: Text(
+        time,
+        style: TextStyle(fontSize: screenSize.width * 0.05),
+      ),
+    )
+    : Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            time,
+            style: TextStyle(fontSize: screenSize.width * 0.05),
+          ),
+          Text(
+            locateProvider.location,
+            style: TextStyle(fontSize: screenSize.width * 0.05),
+          ),
+        ],
+      ),
+    ); 
+  }
+
 }
