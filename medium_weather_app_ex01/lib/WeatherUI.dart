@@ -49,17 +49,6 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
       leading: const Icon(Icons.search),
       titleSpacing: -8,
       backgroundColor: Colors.blue,
-      // title: TextField(
-      //   controller: _textController,
-      //   onChanged: (String value) async {
-      //     final weatherProvider = context.read<WeatherApiData>();
-      //     weatherProvider.fetchCityData(value);
-      //   },
-      //   decoration: const InputDecoration(
-      //     hintText: "find location",
-      //     border: InputBorder.none,
-      //   ),
-      // ),
       title: Autocomplete<String>(
         optionsBuilder: (TextEditingValue textEditingValue) async {
           if (textEditingValue.text == '') {
@@ -68,10 +57,13 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
           final weatherProvider = context.read<WeatherApiData>();
           await weatherProvider.fetchCityData(textEditingValue.text);
           
+          //where -> searchResults의 각 요소에 인자로 들어온 함수를 적용시켜서 true값만 뱉는 경우를 모아 새 list 반환
+          // 주 역할은 filtering
+          //map -> 원하는 형식으로 변환하는 것이 주 임무
           final searchResults = weatherProvider.searchResults
               .where((result) => result['name'].toString().toLowerCase().contains(textEditingValue.text.toLowerCase()))
-              .map((result) => result['name'].toString());
-              
+              .map((result) => "${result['name']} ${result['country']}");
+          
           debugPrint('Filtered city names: ${searchResults.toList()}');
           return searchResults;
         },
@@ -128,6 +120,7 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
       ),
     );
   }
+  
   Center changableText(Size screenSize, String time) {
     final locateProvider = context.watch<GpsData>();
     return locateProvider.location == "" ? 
