@@ -6,6 +6,7 @@ class WeatherApiData extends ChangeNotifier {
 
   String get location => _location;
   String get gpsLoading => _gpsLoading;
+  //test
 
 
 }
