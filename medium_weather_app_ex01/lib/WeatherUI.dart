@@ -49,26 +49,60 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
       leading: const Icon(Icons.search),
       titleSpacing: -8,
       backgroundColor: Colors.blue,
-      title: Autocomplete<String>(
+      title: Autocomplete<Map<String, dynamic>>(
+        displayStringForOption: (option) => "${option['name']} ${option['country']}", 
         optionsBuilder: (TextEditingValue textEditingValue) async {
           if (textEditingValue.text == '') {
-            return const Iterable<String>.empty();
+            return const Iterable<Map<String, dynamic>>.empty();
           }
           final weatherProvider = context.read<WeatherApiData>();
           await weatherProvider.fetchCityData(textEditingValue.text);
           
-          //where -> searchResults의 각 요소에 인자로 들어온 함수를 적용시켜서 true값만 뱉는 경우를 모아 새 list 반환
-          // 주 역할은 filtering
-          //map -> 원하는 형식으로 변환하는 것이 주 임무
-          final searchResults = weatherProvider.searchResults
-              .where((result) => result['name'].toString().toLowerCase().contains(textEditingValue.text.toLowerCase()))
-              .map((result) => "${result['name']} ${result['country']}");
-          
-          debugPrint('Filtered city names: ${searchResults.toList()}');
-          return searchResults;
+          return weatherProvider.searchResults
+              .where((result) => result['name'].toString().toLowerCase()
+                  .contains(textEditingValue.text.toLowerCase()));
         },
-        onSelected: (String selection) {
-          debugPrint('Selected: $selection');
+        optionsViewBuilder: (context, onSelected, options) {
+          return Align(
+            alignment: Alignment.topLeft,
+            child: Material(
+              elevation: 4.0,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 200),
+                child: ListView.builder(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  itemCount: options.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final option = options.elementAt(index);
+                    return ListTile(
+                      title: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: option['name'],
+                              style: const TextStyle(color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: " ${option['country']}",
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: () => onSelected(option),
+                    );
+                  },
+                ),
+              ),
+            ),
+          );
+        },
+        onSelected: (Map<String, dynamic> selection) {
+          debugPrint('Selected: ${selection['name']} ${selection['country']}');
         },
       ),
       actions:  [
