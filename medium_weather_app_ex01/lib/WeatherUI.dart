@@ -68,17 +68,12 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
           final weatherProvider = context.read<WeatherApiData>();
           await weatherProvider.fetchCityData(textEditingValue.text);
           
-          final searchResults = weatherProvider.searchResults;
-          final searchText = textEditingValue.text.toLowerCase();
-          
-          final filteredResults = searchResults.where((result) {
-            final cityName = result['name'].toString().toLowerCase();
-            return cityName.contains(searchText);
-          });
-          
-          final cityNames = filteredResults.map((result) => result['name'].toString());
-          debugPrint('Filtered city names: ${cityNames.toList()}');
-          return cityNames;
+          final searchResults = weatherProvider.searchResults
+              .where((result) => result['name'].toString().toLowerCase().contains(textEditingValue.text.toLowerCase()))
+              .map((result) => result['name'].toString());
+              
+          debugPrint('Filtered city names: ${searchResults.toList()}');
+          return searchResults;
         },
         onSelected: (String selection) {
           debugPrint('Selected: $selection');
