@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 
 class WeatherApiData extends ChangeNotifier {
-  final String _location = "";
-  final String _gpsLoading = "";
+  String _input = "";
+  String _gpsLoading = "";
 
-  String get location => _location;
+  String get input => _input;
   String get gpsLoading => _gpsLoading;
   //test
 
+  void fetchCityData(String value) {
+    _input = value;
+    debugPrint("user input: $_input");
+    
+    notifyListeners();
+  }
 
 }

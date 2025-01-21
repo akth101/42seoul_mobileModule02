@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'GpsData.dart';
+import 'WeatherApiData.dart';
 
 class WeatherUI extends StatefulWidget {
   const WeatherUI({
@@ -50,9 +51,9 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
       backgroundColor: Colors.blue,
       title: TextField(
         controller: _textController,
-        onSubmitted: (String value) async {
-          final locateProvider = context.read<GpsData>();
-          locateProvider.fixLocation(value);
+        onChanged: (String value) async {
+          final weatherProvider = context.read<WeatherApiData>();
+          weatherProvider.fetchCityData(value);
         },
         decoration: const InputDecoration(
           hintText: "find location",

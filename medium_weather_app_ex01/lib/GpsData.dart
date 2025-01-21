@@ -8,13 +8,6 @@ class GpsData extends ChangeNotifier {
   String get location => _location;
   String get gpsLoading => _gpsLoading;
 
-  void fixLocation(String value) {
-    _location = value;
-    debugPrint("changed location in provider: $_location");
-    notifyListeners();
-  }
-
-
   Future<void> getCurrentLocation() async {
     try {
       final startTime = DateTime.now();
