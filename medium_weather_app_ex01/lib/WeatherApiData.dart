@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'WeatherDataManager.dart';
 
 /// WeatherApiData Class
 /// 
@@ -16,9 +17,12 @@ import 'dart:convert';
 class WeatherApiData extends ChangeNotifier {
   String _input = "";
   List<Map<String, dynamic>> _searchResults = [];
+  WeatherData? weatherData;
+
 
   String get input => _input;
   List<Map<String, dynamic>> get searchResults => _searchResults;
+
 
   Future<void> fetchCityData(String value) async {
     _input = value;
@@ -60,4 +64,44 @@ class WeatherApiData extends ChangeNotifier {
           );
     }
   }
+
+  Future<void> fetchWeather(double lat, double lon) async {
+    final response = await http.get(Uri.parse(
+      'https://api.open-meteo.com/v1/forecast?'
+      'latitude=$lat&longitude=$lon'
+      '&current=temperature_2m,weathercode,windspeed_10m'
+      '&hourly=temperature_2m,weathercode,windspeed_10m'
+      '&daily=temperature_2m_max,temperature_2m_min,weathercode,windspeed_10m_max'
+      '&timezone=auto'
+    ));
+
+    if (response.statusCode == 200) {
+        weatherData = WeatherData.fromJson(jsonDecode(response.body));
+        notifyListeners();
+    }
+  }
 }
+
+// {
+//   "latitude": 52.52,
+//   "longitude": 13.419,
+//   "timezone": "Europe/Berlin",
+//   "current": {
+//     "temperature_2m": 15.3,
+//     "weathercode": 1,
+//     "windspeed_10m": 5.2
+//   },
+//   "hourly": {
+//     "time": ["2024-01-21T00:00", "2024-01-21T01:00", ...],
+//     "temperature_2m": [13.2, 12.8, ...],
+//     "weathercode": [1, 1, ...],
+//     "windspeed_10m": [4.3, 4.5, ...]
+//   },
+//   "daily": {
+//     "time": ["2024-01-21", "2024-01-22", ...],
+//     "temperature_2m_max": [16.2, 15.8, ...],
+//     "temperature_2m_min": [8.1, 7.5, ...],
+//     "weathercode": [1, 2, ...],
+//     "windspeed_10m_max": [8.2, 7.9, ...]
+//   }
+// }
