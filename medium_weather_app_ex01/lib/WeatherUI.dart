@@ -49,16 +49,40 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
       leading: const Icon(Icons.search),
       titleSpacing: -8,
       backgroundColor: Colors.blue,
-      title: TextField(
-        controller: _textController,
-        onChanged: (String value) async {
+      // title: TextField(
+      //   controller: _textController,
+      //   onChanged: (String value) async {
+      //     final weatherProvider = context.read<WeatherApiData>();
+      //     weatherProvider.fetchCityData(value);
+      //   },
+      //   decoration: const InputDecoration(
+      //     hintText: "find location",
+      //     border: InputBorder.none,
+      //   ),
+      // ),
+      title: Autocomplete<String>(
+        optionsBuilder: (TextEditingValue textEditingValue) async {
+          if (textEditingValue.text == '') {
+            return const Iterable<String>.empty();
+          }
           final weatherProvider = context.read<WeatherApiData>();
-          weatherProvider.fetchCityData(value);
+          await weatherProvider.fetchCityData(textEditingValue.text);
+          
+          final searchResults = weatherProvider.searchResults;
+          final searchText = textEditingValue.text.toLowerCase();
+          
+          final filteredResults = searchResults.where((result) {
+            final cityName = result['name'].toString().toLowerCase();
+            return cityName.contains(searchText);
+          });
+          
+          final cityNames = filteredResults.map((result) => result['name'].toString());
+          debugPrint('Filtered city names: ${cityNames.toList()}');
+          return cityNames;
         },
-        decoration: const InputDecoration(
-          hintText: "find location",
-          border: InputBorder.none,
-        ),
+        onSelected: (String selection) {
+          debugPrint('Selected: $selection');
+        },
       ),
       actions:  [
         const VerticalDivider(

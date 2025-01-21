@@ -9,10 +9,10 @@ class WeatherApiData extends ChangeNotifier {
   String get input => _input;
   List<Map<String, dynamic>> get searchResults => _searchResults;
 
-  void fetchCityData(String value) {
+  Future<void> fetchCityData(String value) async {
     _input = value;
     debugPrint("user input: $_input");
-    searchCities(_input);
+    await searchCities(_input);
     notifyListeners();
   }
 
@@ -30,12 +30,22 @@ class WeatherApiData extends ChangeNotifier {
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        _searchResults = List<Map<String, dynamic>>.from(data['results'] ?? []);
+        final data = json.decode(response.body); //decode 메서드가 인자로 들어온 데이터를 알맞은 데이터 구조로 변환(여기서는 맵)
+        _searchResults = List<Map<String, dynamic>>.from(data['results'] ?? []); //data map에서 results인 얘들을 모아서 리스트로 만들어줌
+        _printSearchResults(); // 결과 출력 함수 호출
         debugPrint('succeeded to fetch data from api');
       }
     } catch (e) {
       debugPrint('Error: $e');
+    }
+  }
+
+  void _printSearchResults() {
+    for (var result in _searchResults) {
+      debugPrint('City: ${result['name']}, '
+          'Country: ${result['country']}, '
+          'Latitude: ${result['latitude']}, '
+          'Longitude: ${result['longitude']}');
     }
   }
 }
