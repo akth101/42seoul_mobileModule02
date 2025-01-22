@@ -47,7 +47,7 @@ class WeatherApiData extends ChangeNotifier {
         final data = json.decode(response.body); //decode 메서드가 인자로 들어온 데이터를 알맞은 데이터 구조로 변환(여기서는 맵)
         _searchResults = List<Map<String, dynamic>>.from(data['results'] ?? []); //data map에서 key가 results인 얘들을 모아서 리스트로 만들어줌
         _printSearchResults(); // 결과 출력 함수 호출
-        debugPrint('succeeded to fetch data from api');
+        debugPrint('succeeded to fetch [city data] from api');
       }
     } catch (e) {
       debugPrint('Error: $e');
@@ -74,11 +74,37 @@ class WeatherApiData extends ChangeNotifier {
       '&daily=temperature_2m_max,temperature_2m_min,weathercode,windspeed_10m_max'
       '&timezone=auto'
     ));
-
     if (response.statusCode == 200) {
-        weatherData = WeatherData.fromJson(jsonDecode(response.body));
-        notifyListeners();
+      debugPrint('succeeded to fetch [weather data] from api');
+      final decodedData = jsonDecode(response.body);
+      _debugWeatherData(decodedData);  // 디버그 출력 추가
+      weatherData = WeatherData.fromJson(decodedData);
+      notifyListeners();
     }
+  }
+
+  void _debugWeatherData(Map<String, dynamic> data) {
+    debugPrint('\n=== Weather Data Debug ===');
+    debugPrint('Current:');
+    debugPrint('  Temperature: ${data['current']['temperature_2m']}');
+    debugPrint('  WeatherCode: ${data['current']['weathercode']}');
+    debugPrint('  WindSpeed: ${data['current']['windspeed_10m']}');
+    
+    debugPrint('\nHourly (first 3 entries):');
+    for (var i = 0; i < 3; i++) {
+      debugPrint('  ${data['hourly']['time'][i]}: '
+          '${data['hourly']['temperature_2m'][i]}°C, '
+          'Code: ${data['hourly']['weathercode'][i]}, '
+          'Wind: ${data['hourly']['windspeed_10m'][i]}');
+    }
+    
+    debugPrint('\nDaily (first 3 days):');
+    for (var i = 0; i < 3; i++) {
+      debugPrint('  ${data['daily']['time'][i]}: '
+          'Max: ${data['daily']['temperature_2m_max'][i]}°C, '
+          'Min: ${data['daily']['temperature_2m_min'][i]}°C');
+    }
+    debugPrint('========================\n');
   }
 }
 

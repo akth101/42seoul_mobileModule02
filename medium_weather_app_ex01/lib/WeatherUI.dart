@@ -121,6 +121,8 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
         },
         onSelected: (Map<String, dynamic> selection) {
           debugPrint('Selected: ${selection['name']} ${selection['admin1']} ${selection['country']}');
+          final weatherProvider = context.read<WeatherApiData>();
+          weatherProvider.fetchWeather(selection['latitude'], selection['longitude']);
         },
       ),
       actions:  [

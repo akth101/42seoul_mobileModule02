@@ -36,12 +36,14 @@ class WeatherData {
   final Map<String, dynamic> hourly;
   final Map<String, dynamic> daily;
 
+  //기본 생성자
   WeatherData({
     required this.current,
     required this.hourly,
     required this.daily,
   });
 
+  //factory 생성자
   factory WeatherData.fromJson(Map<String, dynamic> json) {
     return WeatherData(
       current: json['current'],
