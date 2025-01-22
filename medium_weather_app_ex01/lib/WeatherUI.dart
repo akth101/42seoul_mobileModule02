@@ -177,29 +177,42 @@ class _WeatherUIState extends State<WeatherUI> with TickerProviderStateMixin {
   
   Center changableText(Size screenSize, String time) {
     final locateProvider = context.watch<GpsData>();
-    return locateProvider.location == "" ? 
-    Center(
-      child: Text(
-        time,
-        style: TextStyle(fontSize: screenSize.width * 0.05),
-      ),
-    )
-    : Center(
+    final weatherProvider = context.watch<WeatherApiData>();
+
+    if (weatherProvider.weatherData == null) {
+      return Center(
+        child: Text(
+          time,
+          style: TextStyle(fontSize: screenSize.width * 0.05),
+        ),
+      );
+    }
+
+    final current = weatherProvider.weatherData!.current;
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            time,
-            style: TextStyle(fontSize: screenSize.width * 0.05),
-          ),
-          Text(
             locateProvider.location,
             style: TextStyle(fontSize: screenSize.width * 0.05),
           ),
+          Text(
+            '${current['temperature_2m']}°C',
+            style: TextStyle(fontSize: screenSize.width * 0.08),
+          ),
+          Text(
+            'Weather Code: ${current['weathercode']}',
+            style: TextStyle(fontSize: screenSize.width * 0.04),
+          ),
+          Text(
+            'Wind Speed: ${current['windspeed_10m']} km/h',
+            style: TextStyle(fontSize: screenSize.width * 0.04),
+          ),
         ],
       ),
-    ); 
+    );
   }
 
 }
